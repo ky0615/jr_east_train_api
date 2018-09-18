@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer')
 
 const CHROMIUM_PATH = process.env.CHROMIUM_PATH || null
-const HEADLESS = (process.env.HEADLESS || 'true') == 'true'
+const HEADLESS = (process.env.HEADLESS || 'true') === 'true'
 
 !(async () => {
     const config = {
