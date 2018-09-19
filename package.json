@@ -2,7 +2,7 @@
   "name": "jr_east_train_api",
   "version": "1.0.0",
   "description": "scraping the jr east official api",
-  "main": "lib.js",
+  "main": "index.js",
   "author": "shobotch",
   "license": "MIT",
   "dependencies": {
