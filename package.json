@@ -2,7 +2,7 @@
   "name": "jr_east_train_api",
   "version": "1.0.0",
   "description": "scraping the jr east official api",
-  "main": "index.js",
+  "main": "lib.js",
   "author": "shobotch",
   "license": "MIT",
   "dependencies": {
@@ -12,6 +12,6 @@
     "babel-eslint": "^9.0.0",
     "eslint-cli": "^1.1.1",
     "eslint-plugin-node": "^7.0.1",
-    "eslint": "^5.6.0",
+    "eslint": "^5.6.0"
   }
 }
