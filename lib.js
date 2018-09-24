@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer')
+const querystring = require('querystring')
 
 const CHROMIUM_PATH = process.env.CHROMIUM_PATH || null
 const HEADLESS = (process.env.HEADLESS || 'true') === 'true'
@@ -53,8 +54,73 @@ const getLineList = async (browser) => {
         return result
     })
 
-    page.close()
+    if (HEADLESS) page.close()
     return jrLineList
 }
 
 module.exports.getLineList = getLineList
+
+const lineInformation = async (browser, args) => {
+    const page = await configurePage(browser)
+    const url = args.link
+    await page.goto(url)
+    const stationList = await page.evaluate(() => {
+        let result = []
+        $('.stNameInc .stNameInc4 .stNameCommon').each((index, element) => {
+            result.push({
+                id: element.id,
+                name: element.innerText,
+            })
+        })
+        return result
+    })
+
+    const trainList = (await page.evaluate(() => {
+        let result = []
+        $('.train_common .delayTime').each((index, element) => {
+            result.push({
+                url: element.href,
+                hash: element.hash,
+                delay: element.innerText,
+            })
+        })
+        return result
+    })).map((element) => {
+        return {
+            url: element.url,
+            hash: querystring.parse(element.hash),
+            delay: element.delay,
+        }
+    })
+
+    return {
+        stationList,
+        trainList,
+    }
+}
+
+module.exports.lineInformation = lineInformation
+
+const getTrainDetail = async (browser, args) => {
+    const page = await configurePage(browser)
+    const url = args.link
+    await page.goto(url)
+    const details = await page.evaluate(() => {
+        let result = []
+        $('.container_body .detail_trainInfoInc').each((index, element) => {
+            const trains = $($(element)[0])
+            result.push({
+                nowLocale: trains.find('.detail_location')[0].innerText,
+                destination: trains.find('.detail_destination_common')[0].innerText,
+                formation: trains.find('.detail_composed')[0].innerText,
+                delayTime: trains.find('.detail_delayTime')[0].innerText,
+            })
+        })
+
+        return result
+    })
+
+    return details
+}
+
+module.exports.getTrainDetail = getTrainDetail
